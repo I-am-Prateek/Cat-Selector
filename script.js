@@ -1,10 +1,12 @@
 document.getElementById("first-option").checked = true;
 
-function getcat(){
+const jsonUrl ="https://api.thecatapi.com/v1/breeds";
+const cname = document.getElementById("outputarea")
+const catCount = document.getElementById('catCount');
+const outputArea = document.getElementById("outputarea");
 
-    const jsonUrl ="https://api.thecatapi.com/v1/breeds";
-    const cname = document.getElementById("outputarea")
-    const catCount = document.getElementById('catCount')
+
+function getcat(){
     console.log("OutputArea: " + cname);
     let catNum= 0;
 
@@ -15,6 +17,7 @@ function getcat(){
                  }
                  return response.json();
              })
+             
              .then(data => {
                  Object.values(data).forEach(value => {
                      const lineBreak = document.createElement('br');
@@ -28,41 +31,102 @@ function getcat(){
              .catch(error => {
                  console.error('Error fetching JSON:', error);
              });
+            }  
+  
+
+function getHealthIssues(){
+    let dataArray = []
+    const healthInput = document.getElementById('health-input').value
+    fetch(jsonUrl)
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Something went wrong.')
+            } return response.json()
+        })
+        .then( data => {
+            data.forEach(catData => {
+                if(catData.health_issues == healthInput){
+                dataArray.push(catData.name)
+            }})    
+            cname.innerHTML = dataArray
+        })
+}
+
+function getWeights() {
+    const isMetric = document.getElementById("first-option").checked;
+
+    fetch(jsonUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Something went wrong.');
             }
-    const output = "";
-    
-//  function catHealthIssue(){
-//     const jsonUrl ="https://api.thecatapi.com/v1/breeds";
-//     const outputArea = document.getElementById("outputArea");
-//     const healthIssueLevel = parseInt(document.getElementById("input").value);
+            return response.json();
+        })
+        .then(data => {
+            outputArea.innerHTML = ''; 
+            data.forEach(cat => {
+                const weightRange = isMetric ? cat.weight.metric : cat.weight.imperial;
+                const unit = isMetric ? 'kg' : 'lbs';
+                outputArea.innerHTML += `${weightRange} ${unit}<br>`;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching JSON:', error);
+            outputArea.innerHTML = "Error fetching data. Please try again.";
+        });
+}
 
-//     if (isNaN(healthIssueLevel) || healthIssueLevel < 1 || healthIssueLevel > 5) 
-//         {
-//             outputArea.innerHTML = "Please enter a valid Health issue level";
-//         }
-//         return;
-//     }
-//     fetch(jsonUrl)
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Something went wrong.');
-//         }
-//     return response.json();
-//     })
-//     .then(data => {
-//         outputArea.innerHTML = ''; 
-//         let catNum = 0;
+function isintelligent() {
+    fetch(jsonUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Something went wrong.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            outputArea.innerHTML = ''; 
+            outputArea.innerHTML += '<strong>I - F </strong><br><br>';
+            
+            data.forEach(cat => {
+                const intelligence = cat.intelligence;
+                const childFriendly = cat.child_friendly;
+                outputArea.innerHTML += `${intelligence} - ${childFriendly}<br>`;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching JSON:', error);
+            outputArea.innerHTML = "Error fetching data. Please try again.";
+        });
+}
 
-//         data.forEach(cat => {
-//             if (cat.health_issues === healthIssueLevel) {
-//                 outputArea.innerHTML += cat.name + '<br>';
-//                 catNum++;
-//             }
-//         });
+function avginteligent() {
+    fetch(jsonUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Something went wrong.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let totalIntelligence = 0;
+            let catCount = 0;
 
-//         outputArea.innerHTML += `Cats with health issue level ${healthIssueLevel}: ${catNum}`;
-//     })
-//     .catch(error => {
-//         console.error('Error fetching JSON:', error);
-//         outputArea.innerHTML = "Error fetching data. Please try again.";
-//     });
+            data.forEach(cat => {
+                if (cat.intelligence) {
+                    totalIntelligence += cat.intelligence;
+                    catCount++;
+                }
+            });
+
+            const averageIntelligence = (totalIntelligence / catCount).toFixed(2);
+
+            outputArea.innerHTML = `<strong>Average Intelligence: ${averageIntelligence}</strong><br><br>`;
+            outputArea.innerHTML += `Total cats considered: ${catCount}`;
+        })
+        .catch(error => {
+            console.error('Error fetching JSON:', error);
+            outputArea.innerHTML = "Error fetching data. Please try again.";
+        });
+}
+

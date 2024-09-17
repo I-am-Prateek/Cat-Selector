@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Selector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="main">
+    <h2>Cat Selector</h2>
+    <button onclick="getcat()" class="my-btn">All Names</button><br>
+    <button id="health-btn" class="my-btn">Health Issues</button>
+    <input  class="my-input" id="input"><br>
+    
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-primary">
+            <input type="radio" id="first-option" name="radio-grp"> <span style="margin-left: 6px;"> Imperial</span>
+        </label>
+        <label class="btn btn-primary"></label>
+            <input type="radio" id="second-option" name="radio-grp"><span style="margin-left: 6px;"> Metric</span>
+        </label>
+        <button onclick="myfuntion()" class="my-btn">Weight</button>
+    </div>
+    <div class="second-btn">
+        <button class="my-btn">Intelligence - Friendly </button><br>
+        <button class="my-btn"> Average Intelligence</button><br>
+        <button class="my-btn"> Average Intelligence For Child Friendly </button><br>
+    </div>
+    <br>
+    <div style="width: 300px; height: 150px; overflow-y: auto;">
+        <h1 id="catCount"></h1>
+        <div id="outputarea" readonly style="width: 100%; height: 100%; resize: none;"></div>
+
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
